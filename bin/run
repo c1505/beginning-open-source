@@ -1,29 +1,72 @@
+require 'json'
+require 'httparty'
+require 'pry'
+
 require_relative "../lib/github_beginner.rb"
 require_relative "../lib/issues.rb"
+require_relative "../lib/secrets.rb"
 
-# puts "Welcome to beginning open source!"
-# puts "With this tool, you can find issues on github with the tag 'begginer' "
-# puts "What would you like to do"
-# puts "1. Get a list of "
+puts "Welcome to beginning open source!".blue
+puts "Viewing open github issues tagged beginner within the ruby language".blue
+puts " "
+puts "With this tool, you can find issues on github by tag".blue
+puts "What tag would you like to search for?".green
+puts "I would suggest 'beginner', or 'help wanted'"
+input_string = gets.chomp.scan(/[a-z\s]/).join
 
-issues_array = GithubBeginner.get_issues
-Issues.create_from_collection(issues_array)
-binding.pry
-#i should have default behavior of the issues that come up and warn the user that it takes 11 seconds.  maybe even do a countdown.  
-#how can i do that after executing the get_issues code
+#***********Remember to change this filename before committing *******************
+File.open("lib/secrets.rb", 'w'){|f| f.write("class GithubBeginner 
+  def self.token
+    'PASTE_TOKEN_HERE_AS_STRING'
+  end
 
-#what do i want to see?  
-# -Issue title
-# -Issue description
-# -
+  def self.agent
+  	'PASTE_GITHUB_USERNAME_HERE_AS_STRING'
+  end
+end")}
+
+def get_and_print(input_string)
+	issues_array = GithubBeginner.get_issues(input_string)
+	Issues.create_from_collection(issues_array)
+	if Issues.starred.empty?
+		binding.pry
+		Issues.all.each do |issue|
+			length = "Issue Url: #{issue.html_url}".length
+			puts " "
+			puts "Issue Title: #{issue.title}".blue
+			puts "Repository Name: #{issue.repo_name}"
+			puts "Repository Description: #{issue.repo_description}"
+			puts "Stars: #{issue.stars}"
+			puts "Labels: #{issue.labels}"
+			puts "Issue Url: #{issue.html_url}"
+			length.times {print "*"}
+		end
+	else
+		Issues.starred.each do |issue|
+			length = "Issue Url: #{issue.html_url}".length
+			puts " "
+			puts "Issue Title: #{issue.title}".blue
+			puts "Repository Name: #{issue.repo_name}"
+			puts "Repository Description: #{issue.repo_description}"
+			puts "Stars: #{issue.stars}"
+			puts "Labels: #{issue.labels}"
+			puts "Issue Url: #{issue.html_url}"
+			length.times {print "*"}
+		end
+	end
+end
+get_and_print(input_string)
 
 
 
 
-#what do i want the commands to do?
-
-#list all issues, title, url, and repo description
-#list issues belonging to one repo
-
-#the key should be the repo title.  
+#****the api will only return one search without being authenticated within a program**
+#ask for input at the start instead so people can search their own labels
+# puts "if you would like to search with a different label name, type 'yes' or type 'exit'".green
+# input = gets.chomp.downcase
+# if input == 'yes'
+# 	puts "please type in the label you would like to search for".green
+# 	input_label = gets.chomp
+# 	get_and_print(input_label)
+# end
 

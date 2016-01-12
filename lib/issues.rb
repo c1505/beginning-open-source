@@ -1,4 +1,4 @@
-require_relative "../lib/github_beginner.rb"
+# require_relative "../lib/github_beginner.rb" #commented out to debug
 class Issues
   attr_accessor :title, :html_url, :repo_name, :repo_description, :body, :stars, :created_at, :labels
 
@@ -9,8 +9,10 @@ class Issues
   def initialize(issues_hash)
     issues_hash.each {|key, value| self.send(("#{key}="), value)}
     @@all << self
-    if stars > 0
-    	@@starred << self
+    unless @stars == nil
+      if @stars > 0          
+      	@@starred << self
+      end
     end
   end
 

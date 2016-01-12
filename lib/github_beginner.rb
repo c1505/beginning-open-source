@@ -1,27 +1,33 @@
 require 'json'
 require 'httparty'
 require 'pry'
-require_relative 'secrets.rb'
+# require_relative 'secrets.rb' #commented out to debug
 class GithubBeginner 
 
-  def self.get_issues
-      #need to select everything between 3 and 5th forward slash
-
-      #currently searching for beginner
-      response = HTTParty.get("https://api.github.com/search/issues?q=label:beginner+language:ruby+state:open&sort=created&order=desc")
+  def self.get_issues(input_string)
+      if self.token == 'PASTE_TOKEN_HERE_AS_STRING'
+        response = HTTParty.get("https://api.github.com/search/issues?q=label:\"#{input_string}\"+language:ruby+state:open&sort=created&order=desc")
+        
+      else
+        response = HTTParty.get("https://api.github.com/search/issues?q=label:\"#{input_string}\"+language:ruby+state:open&sort=created&order=desc",
+          :headers => {
+                  "Authorization" => "token #{self.token}",   #hardcoding doesn't fix it
+                  "User-Agent" => self.agent
+                  })
+      end
       events = JSON.parse(response.body)
       events = events["items"]
 
       array_of_issues = []
       count = 1
       puts "**Caution**\n
-      If you don't provide a github token to authenicate, you can only view repository names once per hour due to github api restrictions".yellow
+      If you don't provide a github token to authenicate, your search results will only return repository descriptions and stars once per hour due to github api restrictions".yellow
 
       events.each do |f| #this is getting very long.  refactor.
           hash_of_issue = {}
           hash_of_issue[:title] = f["title"]
           hash_of_issue[:labels] = (f["labels"].map {|f| f["name"]})
-          # hash_of_issue[:body] = f["body"]  #uncomment
+          hash_of_issue[:body] = f["body"]  #uncomment
           #above commented out because the large amount of output makes it difficult 
           #to see what is going on.
           hash_of_issue[:html_url] = f["html_url"]
@@ -35,14 +41,20 @@ class GithubBeginner
           # binding.pry
           # raise "this"
           # Exception.new("")
-          repo_json = HTTParty.get(
-            repo_string, 
-            :headers => {
-                "Authorization" => "token #{self.token}",
-                "User-Agent" => "c1505"
-                })
+          if self.token == 'PASTE_TOKEN_HERE_AS_STRING'
+            repo_json = HTTParty.get(repo_string)
+          else
+            repo_json = HTTParty.get(
+              repo_string, 
+              :headers => {
+                  "Authorization" => "token #{self.token}",   #hardcoding doesn't fix it
+                  "User-Agent" => "c1505"
+                  })
+          end
 
-          puts "loading #{count}/30" # change this to only doing it on odd times
+          if count > 10
+            puts "loading #{count}/30" # change this to only doing it on odd times
+          end
           count += 1
           repo_parsed = JSON.parse(repo_json.body)
           
@@ -80,6 +92,14 @@ class String
 
   def yellow
     colorize(33)
+  end
+
+  def blue
+    colorize(34)
+  end
+
+  def green
+    colorize(32)
   end
 end
 
