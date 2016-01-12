@@ -1,0 +1,29 @@
+require_relative "../lib/github_beginner.rb"
+require_relative "../lib/issues.rb"
+
+# puts "Welcome to beginning open source!"
+# puts "With this tool, you can find issues on github with the tag 'begginer' "
+# puts "What would you like to do"
+# puts "1. Get a list of "
+
+issues_array = GithubBeginner.get_issues
+Issues.create_from_collection(issues_array)
+binding.pry
+#i should have default behavior of the issues that come up and warn the user that it takes 11 seconds.  maybe even do a countdown.  
+#how can i do that after executing the get_issues code
+
+#what do i want to see?  
+# -Issue title
+# -Issue description
+# -
+
+
+
+
+#what do i want the commands to do?
+
+#list all issues, title, url, and repo description
+#list issues belonging to one repo
+
+#the key should be the repo title.  
+
