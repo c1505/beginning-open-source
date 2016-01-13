@@ -4,10 +4,11 @@ require 'pry'
 # require_relative 'secrets.rb' #commented out to debug
 class GithubBeginner 
 
+  @@array_of_issues = []
+
   def self.get_issues(input_string)
-      if self.token == 'PASTE_TOKEN_HERE_AS_STRING'
+      if self.token == 'PASTE_TOKEN_HERE_AS_STRING' #doing this twice, but with a different url
         response = HTTParty.get("https://api.github.com/search/issues?q=label:\"#{input_string}\"+language:ruby+state:open&sort=created&order=desc")
-        
       else
         response = HTTParty.get("https://api.github.com/search/issues?q=label:\"#{input_string}\"+language:ruby+state:open&sort=created&order=desc",
           :headers => {
@@ -15,74 +16,83 @@ class GithubBeginner
                   "User-Agent" => self.agent
                   })
       end
-      events = JSON.parse(response.body)
-      events = events["items"]
+      puts "Total Issue count matching #{input_string}:".blue + " #{response["total_count"]}".red
 
-      array_of_issues = []
+      search_results = JSON.parse(response.body)["items"]
+
+      
       count = 1
+
       puts "**Caution**\n
       If you don't provide a github token to authenicate, your search results will only return repository descriptions and stars once per hour due to github api restrictions".yellow
 
-      events.each do |f| #this is getting very long.  refactor.
+      search_results.each do |issue| #this is getting very long.  refactor.
           hash_of_issue = {}
-          hash_of_issue[:title] = f["title"]
-          hash_of_issue[:labels] = (f["labels"].map {|f| f["name"]})
-          hash_of_issue[:body] = f["body"]  #uncomment
-          #above commented out because the large amount of output makes it difficult 
-          #to see what is going on.
-          hash_of_issue[:html_url] = f["html_url"]
-          hash_of_issue[:created_at] = f["created_at"]
-          split_url = f["html_url"].split("/")
-          hash_of_issue[:repo_name] = split_url[4]
-          repo_string = "https://api.github.com/repos/#{split_url[3]}/#{split_url[4]}"
 
-          # hash_of_issue[:repo_url] = repo_string #uncomment maybe
+          issue_url_array = issue["html_url"].split("/")
+          hash_of_issue[:repo_name] = issue_url_array[4]
+          repo_string = "https://api.github.com/repos/#{issue_url_array[3]}/#{issue_url_array[4]}"
+          
 
-          # binding.pry
-          # raise "this"
-          # Exception.new("")
-          if self.token == 'PASTE_TOKEN_HERE_AS_STRING'
-            repo_json = HTTParty.get(repo_string)
+          hash_of_issue[:title] = issue["title"]
+          hash_of_issue[:labels] = (issue["labels"].map {|issue| issue["name"]})
+          hash_of_issue[:body] = issue["body"]
+          hash_of_issue[:html_url] = issue["html_url"]
+          hash_of_issue[:created_at] = issue["created_at"]
+          hash_of_issue[:repo_url] = repo_string
+
+
+          if count > 10
+            puts "loading #{count}/30" 
+          end
+          count += 1
+          
+          self.get_repository(issue_url_array[3], issue_url_array[4], hash_of_issue)
+
+          # if self.token == 'PASTE_TOKEN_HERE_AS_STRING' #from here to the end of the string is something different.  
+          #   #getting repo description and 
+          #   repo_json = HTTParty.get(repo_string)
+          # else
+          #   repo_json = HTTParty.get(
+          #     repo_string, 
+          #     :headers => {
+          #         "Authorization" => "token #{self.token}",   
+          #         "User-Agent" => self.agent
+          #         })
+          # end
+
+          # repo_parsed = JSON.parse(repo_json.body)
+          # hash_of_issue[:repo_description] = repo_parsed["description"]
+          # hash_of_issue[:stars] = repo_parsed["stargazers_count"]
+
+          @@array_of_issues << hash_of_issue
+          # array_of_issues
+
+      end #end of each statement
+      @@array_of_issues
+       #there are pagination options.  
+       # right now it is only giving me 30 per page.  can go up to 100
+    end  #end of method
+    def self.get_repository(user, repository, hash)
+          if self.token == 'PASTE_TOKEN_HERE_AS_STRING' #from here to the end of the string is something different.  
+            #getting repo description and 
+            repo_json = HTTParty.get("https://api.github.com/repos/#{user}/#{repository}") 
           else
             repo_json = HTTParty.get(
-              repo_string, 
+              "https://api.github.com/repos/#{user}/#{repository}", 
               :headers => {
-                  "Authorization" => "token #{self.token}",   #hardcoding doesn't fix it
-                  "User-Agent" => "c1505"
+                  "Authorization" => "token #{self.token}",   
+                  "User-Agent" => self.agent
                   })
           end
 
-          if count > 10
-            puts "loading #{count}/30" # change this to only doing it on odd times
-          end
-          count += 1
           repo_parsed = JSON.parse(repo_json.body)
-          
-          hash_of_issue[:repo_description] = repo_parsed["description"]
-          hash_of_issue[:stars] = repo_parsed["stargazers_count"]
-          array_of_issues << hash_of_issue
-          array_of_issues
-          # binding.pry
-      end
+          hash[:repo_description] = repo_parsed["description"]
+          hash[:stars] = repo_parsed["stargazers_count"]
+          hash
+    end
 
-      # array_of_issues.each do |f|
-      #   puts "Repo name" + f[:repo_name]
-      #   puts "Repo description #{f[:repo_description]}"
-      #   puts "Issue title" + f[:title]
-      # end
-
-      #   puts "Repo name: #{array_of_issues[0][:repo_name]}\nRepo description: #{array_of_issues[0][:repo_description]}\nIssue title: #{array_of_issues[0][:title]}\nLink to issue: #{array_of_issues[0][:html_url]}\nIssue body: #{array_of_issues[0][:body]}"
-
-
-      #   puts "Repo description #{array_of_issues[0][:repo_description]}"
-      #   puts "Issue title" + array_of_issues[0][:title]
-
-
-      array_of_issues
-       #there are pagination options.  
-       # right now it is only giving me 30 per page.  can go up to 100
-    end  
-end
+end #end of class
 
 class String
   #colorization
@@ -101,10 +111,9 @@ class String
   def green
     colorize(32)
   end
+
+  def red
+    colorize(31)
+  end
+
 end
-
-
-
-
-
-# GithubBeginner.get_issues
