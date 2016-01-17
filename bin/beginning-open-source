@@ -1,3 +1,5 @@
 #!/usr/bin/env ruby
-require '../lib/beginning_open_source'
+require_relative '../lib/beginning_open_source' #gem isn't loading this.  try changing
+# require 'beginning_open_source'
+#changing from require to require relative works when executing from bin folder.  try to package again
 BeginningOpenSource::CLI.new.call
