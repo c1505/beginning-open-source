@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+require '../lib/beginning_open_source'
+BeginningOpenSource::CLI.new.call
