@@ -1,8 +1,31 @@
 # BeginningOpenSource
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/beginning_open_source`. To experiment with that code, run `bin/console` for an interactive prompt.
+A tool to find beginner friendly open source issues to work on.
 
-TODO: Delete this and the text above, and describe your gem
+**NOTE:** Unless you provide a github token to authenicate, your search results will only return repository descriptions and stars once per hour due to github api restrictions".  Please only generate a public token as this application only accesses public data.  Instructions to generate a github token are here: https://help.github.com/articles/creating-an-access-token-for-command-line-use/ .
+
+###Other resources for finding beginner friendly open source projects*:
+
+http://www.agileventures.org/
+
+http://24pullrequests.com/projects
+
+https://contribulator.herokuapp.com/?language=Ruby
+
+http://www.codetriage.com/
+
+https://github.com/trending
+
+https://blog.newrelic.com/2014/05/05/open-source_gettingstarted/
+
+https://www.youtube.com/watch?v=IXnNgLmd6BM
+
+https://www.youtube.com/watch?v=0OQg42gSol4
+
+https://guides.github.com/activities/contributing-to-open-source/
+
+https://www.quora.com/How-can-I-contribute-to-open-source-software
+
 
 ## Installation
 
