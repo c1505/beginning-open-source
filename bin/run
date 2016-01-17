@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'json'
 require 'httparty'
 require 'pry'
@@ -15,7 +16,7 @@ puts "I would suggest 'beginner', or 'help wanted'"
 input_string = gets.chomp.scan(/[a-z\s]/).join
 
 #***********Remember to change this filename before committing *******************
-File.open("lib/secrets.rb", 'w'){|f| f.write("class GithubBeginner 
+File.open("lib/this_will_be_secrets_file.rb", 'w'){|f| f.write("class GithubBeginner 
   def self.token
     'PASTE_TOKEN_HERE_AS_STRING'
   end

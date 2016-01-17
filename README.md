@@ -21,8 +21,6 @@ https://www.quora.com/How-can-I-contribute-to-open-source-software
 Other ways to contribute to open source:
 write documentation
 triage issues
-   attempt to replicate bugs in issues
-make a small edit to learn.co currciculum
 Talks on contributing to open source:
 
 How to make your first open source commit:
