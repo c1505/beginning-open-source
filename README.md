@@ -4,7 +4,7 @@ A tool to find beginner friendly open source issues to work on.
 
 **NOTE:** Unless you provide a github token to authenicate, your search results will only return repository descriptions and stars once per hour due to github api restrictions".  Please only generate a public token as this application only accesses public data.  Instructions to generate a github token are here: https://help.github.com/articles/creating-an-access-token-for-command-line-use/ .
 
-###Other resources for finding beginner friendly open source projects*:
+###Other resources for finding beginner friendly open source projects:
 
 http://www.agileventures.org/
 
