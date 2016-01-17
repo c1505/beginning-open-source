@@ -1,50 +1,86 @@
 class BeginningOpenSource::CLI
 
 	def call
-		puts "hello world"
-		list_issues
+		generate_secret_file
+		welcome
+		puts "**Caution**\n
+      If you don't provide a github token to authenicate, your search results will only return repository descriptions and stars once per hour due to github api restrictions".yellow
+		list_beginner_issues
 		search_issues
 		goodbye
 	end
 
-	def list_issues #by default, it will return issues in github repos with 1 star or more
-		puts "1. issue 1"
-		puts "2. issue 2"
+	def welcome
+		puts "Welcome to beginning open source!".blue
+		puts "Viewing open github issues labeled 'beginner' within the ruby language".blue
+		puts " "
+		puts "With this tool, you can find issues on github by label".blue
+	end
+
+	def generate_secret_file
+		File.open("../lib/this_will_be_secrets_file.rb", 'w'){|f| f.write("class BeginningOpenSource::GithubApi
+		  def self.token
+		    'PASTE_TOKEN_HERE_AS_STRING'
+		  end
+
+		  def self.agent
+		  	'PASTE_GITHUB_USERNAME_HERE_AS_STRING'
+		  end
+		end")}
+	end
+
+	def list_beginner_issues #by default, it will return issues in github repos with 1 star or more
+		get_and_print('beginner')
 	end
 
 	def search_issues
-		puts "Enter the issue label you would like to search for or type 'exit'"
-		input = gets.chomp.scan(/[a-z\s]/).join
-		unless input == 'exit'
-			#call search method
-			list_issues #do i want to return all issues or just the last searched ones.  i'm thinking last searched
-		end
-		#possibly could store the other in memory to retrieve again if i want
-	end
-
-	def menu
-		puts "Enter the number of the issue you would like to see more information about or type exit"
-		input = nil # use new method i discovered 
+		input = nil
 		while input != "exit"
-			input = gets.strip.downcase
-			case input #will have at least 30, can't do a case statement.  
-			when "1"
-				puts "More info on issue 1"
-			when "2"
-				puts "more info on issue 2"
-			when "list" #this might not make sense.  search instead?
-				list_issues
-			else
-				puts "Not sure what you want.  type list or exit"
+			puts "\n" + "Enter the issue label you would like to search for or type 'exit'".green
+			input = gets.chomp.scan(/[a-z\s]/).join
+			unless input == 'exit' 
+				get_and_print(input)
 			end
+			# list_issues #do i want to return all issues or just the last searched ones.  i'm thinking last searched
+		#possibly could store the other in memory to retrieve again if i want
 		end
-		#list issues
-		#list all issues
-		#search for additional issues
 	end
 
 	def goodbye 
 		puts "Happy learning!"
 	end
+
+	def get_and_print(input_string)
+	issues_array = BeginningOpenSource::GithubApi.get_issues(input_string)
+	
+	BeginningOpenSource::Issues.create_from_collection(issues_array)
+	if BeginningOpenSource::Issues.starred.empty?
+		BeginningOpenSource::Issues.all.each do |issue|
+			length = "Repository Url: #{issue.repo_url}".length
+			puts " "
+			puts "Issue Title: #{issue.title}".blue
+			puts "Repository Name: #{issue.repo_name}"
+			puts "Repository Description: #{issue.repo_description}"
+			puts "Stars: #{issue.stars}"
+			puts "Labels: #{issue.labels}"
+			puts "Issue Url: #{issue.html_url}"
+			puts "Repository Url: #{issue.repo_url}"
+			length.times {print "*"}
+		end
+	else
+		BeginningOpenSource::Issues.starred.each do |issue|
+			length = "Repository Url: #{issue.repo_url}".length
+			puts " "
+			puts "Issue Title: #{issue.title}".blue
+			puts "Repository Name: #{issue.repo_name}"
+			puts "Repository Description: #{issue.repo_description}"
+			puts "Stars: #{issue.stars}"
+			puts "Labels: #{issue.labels}"
+			puts "Issue Url: #{issue.html_url}"
+			puts "Repository Url: #{issue.repo_url}"
+			length.times {print "*"}
+		end
+	end
+end
 
 end
