@@ -1,7 +1,7 @@
 class BeginningOpenSource::CLI
 
 	def call
-		generate_secret_file
+		# generate_secret_file
 		welcome
 		puts "**Caution**\n
       If you don't provide a github token to authenicate, your search results will only return repository descriptions and stars once per hour due to github api restrictions".yellow
@@ -17,17 +17,18 @@ class BeginningOpenSource::CLI
 		puts "With this tool, you can find issues on github by label".blue
 	end
 
-	def generate_secret_file #i don't know what will happen when this is packaged as gem.  make sure the filename is secrets.rb when committing  
-		File.open("../lib/secrets.rb", 'w'){|f| f.write("class BeginningOpenSource::GithubApi
-		  def self.token
-		    'PASTE_TOKEN_HERE_AS_STRING'
-		  end
+	# def generate_secret_file #i don't know what will happen when this is packaged as gem.  make sure the filename is secrets.rb when committing  
+	# 	File.open("../lib/secrets.rb", 'w'){|f| f.write("class BeginningOpenSource::GithubApi
+	# 	  def self.token
+	# 	    'PASTE_TOKEN_HERE_AS_STRING'
+	# 	  end
 
-		  def self.agent
-		  	'PASTE_GITHUB_USERNAME_HERE_AS_STRING'
-		  end
-		end")}
-	end
+	# 	  def self.agent
+	# 	  	'PASTE_GITHUB_USERNAME_HERE_AS_STRING'
+	# 	  end
+	# 	end")}
+	# end
+	#this doesn't work when packaged as a gem
 
 	def list_beginner_issues #by default, it will return issues in github repos with 1 star or more
 		get_and_print('beginner')
