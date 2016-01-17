@@ -2,8 +2,6 @@
 
 A tool to find beginner friendly open source issues to work on.
 
-**NOTE:** Unless you provide a github token to authenicate, your search results will only return repository descriptions and stars once per hour due to github api restrictions".  Please only generate a public token as this application only accesses public data.  Instructions to generate a github token are here: https://help.github.com/articles/creating-an-access-token-for-command-line-use/ .
-
 ###Other resources for finding beginner friendly open source projects*:
 
 http://www.agileventures.org/
@@ -45,9 +43,11 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+type beginning-open-source into the command line to execute the program
 
 ## Development
+
+**NOTE:** Unless you provide a github token to authenicate, your search results will only return repository descriptions and stars once per hour due to github api restrictions".  Please only generate a public token as this application only accesses public data.  Instructions to generate a github token are here: https://help.github.com/articles/creating-an-access-token-for-command-line-use/ .  When developing, you can paste your username and public token into the secrets.rb file. 
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 

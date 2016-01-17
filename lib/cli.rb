@@ -3,8 +3,6 @@ class BeginningOpenSource::CLI
 	def call
 		# generate_secret_file
 		welcome
-		puts "**Caution**\n
-      If you don't provide a github token to authenicate, your search results will only return repository descriptions and stars once per hour due to github api restrictions".yellow
 		list_beginner_issues
 		search_issues
 		goodbye
