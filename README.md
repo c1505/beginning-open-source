@@ -2,7 +2,7 @@
 
 A tool to find beginner friendly open source issues to work on.
 
-###Other resources for finding beginner friendly open source projects*:
+###Other resources for finding beginner friendly open source projects:
 
 http://www.agileventures.org/
 
