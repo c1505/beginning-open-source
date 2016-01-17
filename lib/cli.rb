@@ -17,8 +17,8 @@ class BeginningOpenSource::CLI
 		puts "With this tool, you can find issues on github by label".blue
 	end
 
-	def generate_secret_file
-		File.open("../lib/this_will_be_secrets_file.rb", 'w'){|f| f.write("class BeginningOpenSource::GithubApi
+	def generate_secret_file #i don't know what will happen when this is packaged as gem.  make sure the filename is secrets.rb when committing  
+		File.open("../lib/secrets.rb", 'w'){|f| f.write("class BeginningOpenSource::GithubApi
 		  def self.token
 		    'PASTE_TOKEN_HERE_AS_STRING'
 		  end
