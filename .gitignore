@@ -9,3 +9,4 @@
 /tmp/
 /lib/this_will_be_secrets_file.rb
 notes.md
+/lib/secrets.rb
