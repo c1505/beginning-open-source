@@ -19,7 +19,9 @@ Gem::Specification.new do |spec|
 
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir        = "exe"
+  # spec.bindir        = "exe" #should this be bin?
+  spec.bindir        = "bin" #should this be bin?
+
   # spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) } this was the default, but wasn't working.  trying as below
   spec.executables   = ["beginning-open-source"]
   spec.require_paths = ["lib"]
