@@ -24,6 +24,8 @@ https://guides.github.com/activities/contributing-to-open-source/
 
 https://www.quora.com/How-can-I-contribute-to-open-source-software
 
+https://changelog.com/nightly/
+
 
 ## Installation
 
