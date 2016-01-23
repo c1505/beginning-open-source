@@ -26,13 +26,7 @@ class BeginningOpenSource::CLI
 			unless input == 'exit' 
 				get_and_print(input)
 			end
-			# list_issues #do i want to return all issues or just the last searched ones.  i'm thinking last searched
-		#possibly could store the other in memory to retrieve again if i want
 		end
-	end
-
-	def goodbye 
-		puts "Happy learning!"
 	end
 
 	def get_and_print(input_string)
@@ -41,31 +35,30 @@ class BeginningOpenSource::CLI
 		BeginningOpenSource::Issues.create_from_collection(issues_array)
 		if BeginningOpenSource::Issues.starred.empty?
 			BeginningOpenSource::Issues.all.each do |issue|
-				length = "Repository Url: #{issue.repo_url}".length
-				puts " "
-				puts "Issue Title: #{issue.title}".blue
-				puts "Repository Name: #{issue.repo_name}"
-				puts "Repository Description: #{issue.repo_description}"
-				puts "Stars: #{issue.stars}"
-				puts "Labels: #{issue.labels}"
-				puts "Issue Url: #{issue.html_url}"
-				puts "Repository Url: #{issue.repo_url}"
-				length.times {print "*"}
+				print_issues(issue)
 			end
 		else
 			BeginningOpenSource::Issues.starred.each do |issue|
-				length = "Repository Url: #{issue.repo_url}".length
-				puts " "
-				puts "Issue Title: #{issue.title}".blue
-				puts "Repository Name: #{issue.repo_name}"
-				puts "Repository Description: #{issue.repo_description}"
-				puts "Stars: #{issue.stars}"
-				puts "Labels: #{issue.labels}"
-				puts "Issue Url: #{issue.html_url}"
-				puts "Repository Url: #{issue.repo_url}"
-				length.times {print "*"}
+				print_issues(issue)
 			end
 		end
-end
+	end
+
+	def print_issues(issue)
+		length = "Repository Url: #{issue.repo_url}".length
+		puts " "
+		puts "Issue Title: #{issue.title}".blue
+		puts "Repository Name: #{issue.repo_name}"
+		puts "Repository Description: #{issue.repo_description}"
+		puts "Stars: #{issue.stars}"
+		puts "Labels: #{issue.labels}"
+		puts "Issue Url: #{issue.html_url}"
+		puts "Repository Url: #{issue.repo_url}"
+		length.times {print "*"}
+	end
+
+	def goodbye 
+		puts "Happy learning!"
+	end
 
 end
