@@ -1,3 +1,4 @@
+require 'pry'
 class BeginningOpenSource::GithubApi
 
   #i am passing around variables.  might be better off using class variables.  
@@ -7,8 +8,7 @@ class BeginningOpenSource::GithubApi
       response = self.search_issues(input_string)
 
       puts "Total Issue count matching #{input_string}:".blue + " #{response["total_count"]}".red
-
-      search_results = JSON.parse(response.body)["items"]
+      search_results = response["items"]
 
       loaded_repo_count = 1
       search_results.each do |issue| 
@@ -43,32 +43,30 @@ class BeginningOpenSource::GithubApi
 
     def self.search_issues(input_string)
       if self.token == 'PASTE_TOKEN_HERE_AS_STRING' #doing this twice, but with a different url.  if i take in the url or have it set as a variable, i might be able to combine these
-        response = HTTParty.get("https://api.github.com/search/issues?q=label:\"#{input_string}\"+language:ruby+state:open&sort=created&order=desc")
+        HTTParty.get("https://api.github.com/search/issues?q=label:\"#{input_string}\"+language:ruby+state:open&sort=created&order=desc")
       else
-        response = HTTParty.get("https://api.github.com/search/issues?q=label:\"#{input_string}\"+language:ruby+state:open&sort=created&order=desc",
+        HTTParty.get("https://api.github.com/search/issues?q=label:\"#{input_string}\"+language:ruby+state:open&sort=created&order=desc",
           :headers => {
                   "Authorization" => "token #{self.token}",
                   "User-Agent" => self.agent
                   })
       end
-      response
     end
 
     def self.get_repository(user, repository, hash)
-          if self.token == 'PASTE_TOKEN_HERE_AS_STRING'
-            repo_json = HTTParty.get("https://api.github.com/repos/#{user}/#{repository}") 
-          else
-            repo_json = HTTParty.get(
-              "https://api.github.com/repos/#{user}/#{repository}", 
-              :headers => {
-                  "Authorization" => "token #{self.token}",   
-                  "User-Agent" => self.agent
-                  })
-          end
-          repo_parsed = JSON.parse(repo_json.body)
-          hash[:repo_description] = repo_parsed["description"]
-          hash[:stars] = repo_parsed["stargazers_count"]
-          hash
+        if self.token == 'PASTE_TOKEN_HERE_AS_STRING'
+          repo_json = HTTParty.get("https://api.github.com/repos/#{user}/#{repository}") 
+        else
+          repo_json = HTTParty.get(
+            "https://api.github.com/repos/#{user}/#{repository}", 
+            :headers => {
+                "Authorization" => "token #{self.token}",   
+                "User-Agent" => self.agent
+                })
+        end
+        hash[:repo_description] = repo_json["description"]
+        hash[:stars] = repo_json["stargazers_count"]
+        hash
     end
 
 end #end of class

@@ -15,6 +15,5 @@ require_relative "beginning_open_source/issues.rb"
 require_relative "secrets.rb"
 require_relative "cli"
 
-require 'json'
 require 'httparty'
 # require 'pry' #just for development
