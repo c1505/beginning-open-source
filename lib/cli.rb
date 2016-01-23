@@ -36,36 +36,36 @@ class BeginningOpenSource::CLI
 	end
 
 	def get_and_print(input_string)
-	issues_array = BeginningOpenSource::GithubApi.get_issues(input_string)
-	
-	BeginningOpenSource::Issues.create_from_collection(issues_array)
-	if BeginningOpenSource::Issues.starred.empty?
-		BeginningOpenSource::Issues.all.each do |issue|
-			length = "Repository Url: #{issue.repo_url}".length
-			puts " "
-			puts "Issue Title: #{issue.title}".blue
-			puts "Repository Name: #{issue.repo_name}"
-			puts "Repository Description: #{issue.repo_description}"
-			puts "Stars: #{issue.stars}"
-			puts "Labels: #{issue.labels}"
-			puts "Issue Url: #{issue.html_url}"
-			puts "Repository Url: #{issue.repo_url}"
-			length.times {print "*"}
+		issues_array = BeginningOpenSource::GithubApi.get_issues(input_string)
+		
+		BeginningOpenSource::Issues.create_from_collection(issues_array)
+		if BeginningOpenSource::Issues.starred.empty?
+			BeginningOpenSource::Issues.all.each do |issue|
+				length = "Repository Url: #{issue.repo_url}".length
+				puts " "
+				puts "Issue Title: #{issue.title}".blue
+				puts "Repository Name: #{issue.repo_name}"
+				puts "Repository Description: #{issue.repo_description}"
+				puts "Stars: #{issue.stars}"
+				puts "Labels: #{issue.labels}"
+				puts "Issue Url: #{issue.html_url}"
+				puts "Repository Url: #{issue.repo_url}"
+				length.times {print "*"}
+			end
+		else
+			BeginningOpenSource::Issues.starred.each do |issue|
+				length = "Repository Url: #{issue.repo_url}".length
+				puts " "
+				puts "Issue Title: #{issue.title}".blue
+				puts "Repository Name: #{issue.repo_name}"
+				puts "Repository Description: #{issue.repo_description}"
+				puts "Stars: #{issue.stars}"
+				puts "Labels: #{issue.labels}"
+				puts "Issue Url: #{issue.html_url}"
+				puts "Repository Url: #{issue.repo_url}"
+				length.times {print "*"}
+			end
 		end
-	else
-		BeginningOpenSource::Issues.starred.each do |issue|
-			length = "Repository Url: #{issue.repo_url}".length
-			puts " "
-			puts "Issue Title: #{issue.title}".blue
-			puts "Repository Name: #{issue.repo_name}"
-			puts "Repository Description: #{issue.repo_description}"
-			puts "Stars: #{issue.stars}"
-			puts "Labels: #{issue.labels}"
-			puts "Issue Url: #{issue.html_url}"
-			puts "Repository Url: #{issue.repo_url}"
-			length.times {print "*"}
-		end
-	end
 end
 
 end
